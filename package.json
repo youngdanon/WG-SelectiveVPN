@@ -1,9 +1,9 @@
 {
   "name": "unblock",
-  "module": "src/index.ts",
+  "module": "index.ts",
   "type": "module",
   "scripts": {
-    "compile:win-x64": "bun build --compile --minify --sourcemap ./src/index.ts --outfile ./release/wg-selective"
+    "compile:win-x64": "bun build --compile --minify --sourcemap index.ts --outfile ./release/wg-selective"
   },
   "devDependencies": {
     "@types/bun": "latest"

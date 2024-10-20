@@ -3,27 +3,25 @@ import {parseArgs} from "util";
 import ini from "ini";
 import type {WgConfig} from "./types.ts";
 import {groupIpsBySubnet} from "./masks.ts";
+import * as fs from "node:fs";
+
 
 const $api = axios.create()
 
 const CUSTOM_IPS = [
   '140.82.112.21/20',
-  // '140.82.113.22',
-  // '140.82.121.4',
-  // '140.82.121.6',
-
   '20.199.39.224/32',
   '13.107.5.93/32'
 ]
 
 
 const readWgConfig = async (path: string) => {
-  const file = Bun.file(path)
-  return ini.parse(await file.text()) as WgConfig
+  const file = fs.readFileSync(path).toString()
+  return ini.parse(file) as WgConfig
 }
 
 const prepareAllowedIPs = async (allowedIPs: string) => {
-  const discordVoiceIps = await groupIpsBySubnet('data/discord-voice-ip-list.txt')
+  const discordVoiceIps = await groupIpsBySubnet()
   const customIPs = [...CUSTOM_IPS, ...discordVoiceIps].join(', ')
 
 
@@ -75,7 +73,9 @@ const main = async () => {
   }
 
 
+
   const conf = await readWgConfig(values.path)
+
 
   const {data} = await $api.get<string>('https://antifilter.download/list/allyouneed.lst')
   const preparedAllowedIPs = await prepareAllowedIPs(data)

@@ -1,4 +1,6 @@
 import * as ipLib from 'ip';
+// @ts-ignore
+import voiceIpsFile from './data/discord-voice-ip-list.txt' with { type: 'file' }
 
 // Функция для вычисления минимальной маски подсети для группы IP-адресов
 const calculateSubnet = (ips: string[]): string => {
@@ -20,11 +22,11 @@ const calculateSubnet = (ips: string[]): string => {
 };
 
 // Функция для группировки IP-адресов по подсетям
-export const groupIpsBySubnet = async (pathToIps: string): Promise<string[]> => {
+export const groupIpsBySubnet = async (): Promise<string[]> => {
 
     // Чтение файла с IP адресами
     // const fileContent = fs.readFileSync(pathToIps, 'utf-8');
-    const fileContent = await Bun.file(pathToIps).text()
+    const fileContent = await Bun.file(voiceIpsFile).text()
 
     // Разделяем IP-адреса по строкам
     const ips = fileContent.split('\n').map(line => line.trim()).filter(line => line);
@@ -41,7 +43,7 @@ export const groupIpsBySubnet = async (pathToIps: string): Promise<string[]> => 
             subnets.push(subnet);
         }
     });
-    console.log(`Группировка и вычисление подсетей для ${pathToIps} завершены`);
+    console.log(`Группировка и вычисление подсетей завершены`);
 
 
     return subnets;
